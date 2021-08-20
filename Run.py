@@ -3,6 +3,7 @@ from Socket import openSocket, sendMessage
 from Initialize import joinRoom
 import time
 from Tts import tts
+import re
 
 s = openSocket()
 joinRoom(s)
@@ -58,7 +59,9 @@ while True:
                         speech.updateFile()
                 
                 elif "tts" in message[1:4]:
-                    if not "HTTP://" in message:
+                    regex = r"(?i)\b((?:https?://|www\d{0,3}[.]|[a-z0-9.\-]+[.][a-z]{2,4}/)(?:[^\s()<>]+|\(([^\s()<>]+|(\([^\s()<>]+\)))*\))+(?:\(([^\s()<>]+|(\([^\s()<>]+\)))*\)|[^\s`!()\[\]{};:'\".,<>?«»“”‘’]))"
+                    pattern = re.compile(regex)
+                    if pattern.search(message) is None:
                         speech.decir(user, message[5:])
                     else:
                         sendMessage(s, "@" + user + " No puedes usar links en tts.")
